@@ -4,32 +4,53 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
+//public class CountryList implements List<T> {
 public class CountryList {
-    private static final String FILE_ITEM_DELIMITER = "\t";
 
     ArrayList<Country> countries = new ArrayList<>();
+
+    public ArrayList<Country> getCountries() {
+        return countries;
+    }
+
+    public void setCountries(ArrayList<Country> countries) {
+        this.countries = countries;
+    }
 
     public void addCountry(Country country) {
         countries.add(country);
     }
 
+    public Country getCountry(int index) {
+        return countries.get(index);
+    }
 
-    public void importPlantsFromFile(String fileName) throws CountryException {
+    public int size() {
+        return countries.size();
+    }
+
+    public void sortCountries() {
+        Collections.sort(countries);
+    }
+
+
+    public void importCountriesFromFile(String fileName, String fileItemDelimiter) throws CountryException {
         try (Scanner scanner = new Scanner(new BufferedReader(new FileReader(fileName)))) {
             int lineNumber = 0;
             while (scanner.hasNextLine()) {
                 String record = scanner.nextLine();
                 lineNumber++;
                 try {
-                    this.addCountry(Country.parse(record, FILE_ITEM_DELIMITER));
+                    this.addCountry(Country.parse(record, fileItemDelimiter));
                 } catch (CountryException e) {
-                    throw new CountryException("Neplatný vstupní soubor "+fileName+" na řádku "+lineNumber+":\n\t"+e.getLocalizedMessage());
+                    throw new CountryException("Neplatný vstupní soubor " + fileName + " na řádku " + lineNumber + ":\n\t" + e.getLocalizedMessage());
                 }
             }
         } catch (FileNotFoundException e) {
-            throw new CountryException("Vstupní soubor "+fileName+" nebyl nalezen: "+e.getLocalizedMessage());
+            throw new CountryException("Vstupní soubor " + fileName + " nebyl nalezen: " + e.getLocalizedMessage());
         }
     }
 
